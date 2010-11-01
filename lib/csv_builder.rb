@@ -45,7 +45,8 @@ module ActionView # :nodoc:
             #{template.source}
           end
 
-          unless defined?(ActionMailer) && defined?(ActionMailer::Base) && controller.is_a?(ActionMailer::Base)
+          # NOTE: controller will not be defined if we're running from a model (such as in a background task) instead of a controller.
+          unless controller && defined?(ActionMailer) && defined?(ActionMailer::Base) && controller.is_a?(ActionMailer::Base)
             @filename ||= "\#{controller.action_name}.csv"
             if controller.request.env['HTTP_USER_AGENT'] =~ /msie/i
               controller.response.headers['Pragma'] = 'public'
